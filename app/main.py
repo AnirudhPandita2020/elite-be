@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.controller import user_controller, truck_controller, certificate_controller
+from app.controller.router.api import main_router
 
 app = FastAPI(
     title="Elite Vehicle Certificate Manager",
@@ -13,6 +13,4 @@ app = FastAPI(
     }
 )
 
-app.include_router(user_controller.router)
-app.include_router(truck_controller.router)
-app.include_router(certificate_controller.router)
+app.include_router(main_router)

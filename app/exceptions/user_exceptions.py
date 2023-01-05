@@ -13,5 +13,15 @@ class UserNotActiveException(HTTPException):
 
 class UserCredentialException(HTTPException):
     def __init__(self, message="Credential Validation Failed"):
-        super(UserCredentialException, self).__init__(detail=message, status_code=status.HTTP_401_UNAUTHORIZED,
+        super(UserCredentialException, self).__init__(detail=message, status_code=status.HTTP_403_FORBIDDEN,
                                                       headers={"WWW-Authenticate": "Bearer"})
+
+
+class NotValidEmailException(HTTPException):
+    def __init__(self, message="User creation failed"):
+        super().__init__(detail=message, status_code=status.HTTP_403_FORBIDDEN)
+
+
+class UserAccessDeniedException(HTTPException):
+    def __init__(self, message="Access Denied"):
+        super().__init__(detail=message, status_code=status.HTTP_403_FORBIDDEN)

@@ -8,3 +8,12 @@ class CertificateEnum(Enum):
     permit = "Permit"
     green_tax = "Green Tax"
     insurance = "Insurance"
+    pollution = "Pollution"
+
+
+class Sites(Enum):
+    KPCL = "KPCL"
+    KKD = "KKD"
+    KAT = "KAT"
+    VIZ = "VIZ"
+    SHE = "SHE"
