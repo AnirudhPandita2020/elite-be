@@ -1,5 +1,6 @@
-from datetime import datetime, timedelta
+from time import time
 
 
-async def certificate_id():
-    return 'ETC' + str(datetime.utcnow()) + str(datetime.utcnow() + timedelta(minutes=120))
+def certificate_id():
+    value = str(int(time() * 1000))
+    return "ETC" + value[0:(len(value) - 1 // 2)]

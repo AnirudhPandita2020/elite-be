@@ -11,7 +11,7 @@ from app.utils.env_utils import setting
 
 
 async def add_truck(create_truck: CreateTruckDto, db: Session, user: User) -> Truck:
-    if user.isActive is False and user.authority_level != int(setting.authority_level):
+    if user.is_active is False and user.authority_level != int(setting.authority_level):
         raise UserAccessDeniedException()
 
     new_truck = Truck(**create_truck.dict())

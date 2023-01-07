@@ -20,20 +20,10 @@ def upgrade() -> None:
         "certificates",
         sa.Column('certificate_id', sa.String(), nullable=False, primary_key=True),
         sa.Column('truck_id', sa.Integer(), sa.ForeignKey('truck.truck_id', ondelete="CASCADE"), nullable=False),
-        sa.Column('road_tax', sa.String(), nullable=True),
-        sa.Column('road_update_on', sa.DATE(), nullable=True),
-        sa.Column('fitness_certificate', sa.String(), nullable=True),
-        sa.Column('fitness_updated_on', sa.DATE(), nullable=True),
-        sa.Column('goods_carrier_permission', sa.String(), nullable=True),
-        sa.Column('goods_updated_on', sa.DATE(), nullable=True),
-        sa.Column('national_permit', sa.String(), nullable=True),
-        sa.Column('permit_updated_on', sa.DATE(), nullable=True),
-        sa.Column('green_tax', sa.String(), nullable=True),
-        sa.Column('green_tax_updated_on', sa.DATE(), nullable=True),
-        sa.Column('insurance', sa.String(), nullable=True),
-        sa.Column('insurance_updated_on', sa.DATE(), nullable=True)
+        sa.Column('type', sa.String(), nullable=False),
+        sa.Column('certificate_link', sa.String(), nullable=False),
+        sa.Column('updated_on', sa.DATE(), nullable=False)
     )
 
-
-def downgrade() -> None:
-    op.drop_table('certificates')
+    def downgrade() -> None:
+        op.drop_table('certificates')

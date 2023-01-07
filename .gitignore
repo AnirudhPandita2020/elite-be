@@ -4,3 +4,4 @@ __pycache__
 build
 .idea/*
 elite_truck.xlsx
+*.pdf

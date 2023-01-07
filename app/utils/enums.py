@@ -5,10 +5,11 @@ class CertificateEnum(Enum):
     road_tax = "Road Tax"
     fitness_certificate = "Fitness Certificate"
     goods_certificate_permission = "Goods Carrier Permission"
-    permit = "Permit"
+    permit = "National Permit"
     green_tax = "Green Tax"
     insurance = "Insurance"
     pollution = "Pollution"
+    rc = "RC"
 
 
 class Sites(Enum):
