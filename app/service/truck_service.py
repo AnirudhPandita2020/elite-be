@@ -11,7 +11,7 @@ from app.utils.env_utils import setting
 
 
 async def add_truck(create_truck: CreateTruckDto, db: Session, user: User) -> Truck:
-    if user.isActive and user.authority_level == int(setting.authority_level):
+    if user.isActive is False and user.authority_level != int(setting.authority_level):
         raise UserAccessDeniedException()
 
     new_truck = Truck(**create_truck.dict())
@@ -31,10 +31,20 @@ async def fetch_truck_by_site(site: Sites, db: Session) -> List[Truck]:
     return findTrucksBySite(site, db)
 
 
-async def upload_excel_file_of_trucks(file: UploadFile, user: User, db: Session) -> dict:
+def upload_excel_file_of_trucks(file: UploadFile, user: User, db: Session):
     with open(f'elite_truck.xlsx', 'wb') as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    truck_list = await fetchTruckFromExcel(load_workbook(file.filename))
+    truck_list = fetchTruckFromExcel(load_workbook(f'elite_truck.xlsx'), user.id)
     saveTruckList(truck_list, db)
-    return {'message': f'Added {len(truck_list)} trucks'}
+    return truck_list
+
+
+async def update_truck_detail(truck_id: int, update_truck_dto: CreateTruckDto, user: User, db: Session) -> Truck:
+    truck = findTruckById(truck_id, db)
+    if not truck:
+        raise TruckNotPresentException()
+    if truck.created_by != user.id:
+        raise UserAccessDeniedException()
+
+    return updateTruckDetail(truck_id, update_truck_dto, db)

@@ -19,3 +19,11 @@ class Certificates(Base):
     green_updated_on = Column(DATE, nullable=True)
     insurance = Column(String, nullable=True)
     insurance_updated_on = Column(DATE, nullable=True)
+
+
+class CertificateHistory(Base):
+    __tablename__ = 'certificate_history'
+    history_id = Column(Integer, autoincrement=True, primary_key=True)
+    certificate_type = Column(String, nullable=False)
+    certificate_link = Column(String, nullable=False)
+    truck_id = Column(String, ForeignKey('truck.truck_id', ondelete="CASCADE"), nullable=False)

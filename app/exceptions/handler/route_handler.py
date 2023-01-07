@@ -2,6 +2,7 @@ from typing import Callable
 
 from fastapi import Request, Response, HTTPException
 from fastapi.routing import APIRoute
+from pydantic import ValidationError
 
 
 class RouteErrorHandler(APIRoute):
@@ -12,7 +13,7 @@ class RouteErrorHandler(APIRoute):
             try:
                 return await original_route_handler(request)
             except Exception as ex:
-                if isinstance(ex, HTTPException):
+                if isinstance(ex, HTTPException) or isinstance(ex, ValidationError):
                     raise ex
                 raise HTTPException(status_code=500, detail=str(ex))
 

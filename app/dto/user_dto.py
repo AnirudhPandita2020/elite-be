@@ -14,7 +14,7 @@ class UserModel(BaseModel):
     name: str
     authority_level = int
     created_at: datetime
-    isActive: bool
+    is_active: bool
 
     class Config:
         orm_mode = True

@@ -1,6 +1,9 @@
+import firebase_admin
 from fastapi import FastAPI
+from firebase_admin import credentials
 
 from app.controller.router.api import main_router
+from app.utils.env_utils import firebase_cred
 
 app = FastAPI(
     title="Elite Vehicle Certificate Manager",
@@ -14,3 +17,12 @@ app = FastAPI(
 )
 
 app.include_router(main_router)
+
+
+@app.on_event("startup")
+async def start_firebase():
+    firebase_admin.initialize_app(
+        credentials.Certificate(firebase_cred.dict()), {
+            'storageBucket': firebase_cred.storage_bucket
+        }
+    )

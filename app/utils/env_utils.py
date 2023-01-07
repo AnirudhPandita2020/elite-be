@@ -18,3 +18,23 @@ class Settings(BaseSettings):
 
 
 setting = Settings()
+
+
+class Firebase(BaseSettings):
+    type: str
+    project_id: str
+    private_key_id: str
+    private_key: str
+    client_email: str
+    client_id: str
+    auth_uri: str
+    token_uri: str
+    auth_provider_x509_cert_url: str
+    client_x509_cert_url: str
+    storage_bucket: str
+
+    class Config:
+        env_file = ".env"
+
+
+firebase_cred = Firebase()

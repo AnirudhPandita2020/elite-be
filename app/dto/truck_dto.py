@@ -8,4 +8,4 @@ class CreateTruckDto(BaseModel):
     engine_number: str
     trailer_length: int
     suspension: str
-
+    engine: str
