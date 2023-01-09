@@ -32,6 +32,8 @@ async def fetch_truck_by_site(site: Sites, db: Session) -> List[Truck]:
 
 
 def upload_excel_file_of_trucks(file: UploadFile, user: User, db: Session):
+    if user.is_active is False and user.authority_level != int(setting.authority_level):
+        raise UserAccessDeniedException()
     with open(f'elite_truck.xlsx', 'wb') as buffer:
         shutil.copyfileobj(file.file, buffer)
 
@@ -41,6 +43,8 @@ def upload_excel_file_of_trucks(file: UploadFile, user: User, db: Session):
 
 
 async def update_truck_detail(truck_id: int, update_truck_dto: CreateTruckDto, user: User, db: Session) -> Truck:
+    if user.is_active is False and user.authority_level != int(setting.authority_level):
+        raise UserAccessDeniedException()
     truck = findTruckById(truck_id, db)
     if not truck:
         raise TruckNotPresentException()

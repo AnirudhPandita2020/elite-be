@@ -32,3 +32,4 @@ def save(certificate: Certificates, db: Session) -> Certificates:
         return certificate
     except IntegrityError:
         db.rollback()
+

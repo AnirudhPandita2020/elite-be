@@ -17,7 +17,7 @@ class UserController:
         """Creates a new Elite User"""
         return await create_user(create_user_dto, self.db)
 
-    @router.post(path="/api/elite/login", status_code=status.HTTP_202_ACCEPTED)
+    @router.post(path="/api/elite/login", status_code=status.HTTP_201_CREATED)
     async def login_user(self, user_creds: OAuth2PasswordRequestForm = Depends()) -> dict:
         """Logs in a user with a working token"""
         return await login_user(user_creds.username, user_creds.password, self.db)

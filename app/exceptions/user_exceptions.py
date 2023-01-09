@@ -25,3 +25,8 @@ class NotValidEmailException(HTTPException):
 class UserAccessDeniedException(HTTPException):
     def __init__(self, message="Access Denied"):
         super().__init__(detail=message, status_code=status.HTTP_403_FORBIDDEN)
+
+
+class UserPasswordWeakException(HTTPException):
+    def __init__(self, message="The given password is weak.Consider adding a strong one"):
+        super().__init__(detail=message, status_code=status.HTTP_400_BAD_REQUEST)

@@ -4,11 +4,14 @@ from app.security.oauth2_bearer import *
 from app.service.repository.user_repository import *
 from app.utils.password_utils import *
 from app.utils.valid_email import check_valid_company_email
+from app.utils.valid_password import check_strong_password
 
 
 async def create_user(user: CreateUserDto, db: Session) -> User:
     if not check_valid_company_email(user.email):
         raise NotValidEmailException()
+    if not check_strong_password(user.password):
+        raise UserPasswordWeakException()
     existing_user = findByEmail(user.email, db)
     if existing_user:
         raise UserAlreadyPresentException()

@@ -26,3 +26,8 @@ class CertificateController:
     async def fetch_certificate(self, truck_id: str):
         """Fetch a trucks particular certificate"""
         return await fetch_certificate_of_truck(int(truck_id), self.db)
+
+    @router.get(path="/api/elite/certificate/site", status_code=status.HTTP_200_OK)
+    async def fetch_certificates_based_on_type(self, truck_id: str, certificate_type: CertificateEnum):
+        """Fetches certificate of a particular type"""
+        return await fetch_certificate_site_based(truck_id,certificate_type,self.db)

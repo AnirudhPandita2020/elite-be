@@ -13,7 +13,7 @@ from app.utils.env_utils import setting
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/elite/login")
 SECRET_KEY = setting.secret_key
 ALGORITHM = setting.algorithm
-ACCESS_TOKEN_EXPIRE = setting.access_token_expire_minutes
+ACCESS_TOKEN_EXPIRE = int(setting.access_token_expire_minutes)
 
 
 def create_bearer_token(data: dict) -> str:

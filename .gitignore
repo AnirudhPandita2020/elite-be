@@ -5,3 +5,4 @@ build
 .idea/*
 elite_truck.xlsx
 *.pdf
+.pytest_cache

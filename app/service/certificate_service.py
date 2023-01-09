@@ -52,3 +52,11 @@ async def fetch_url_of_certificate(file: UploadFile):
     file_blob.make_public()
     os.unlink(file.filename)
     return file_blob.public_url
+
+
+async def fetch_certificate_site_based(truck_id: int, certificate_type: CertificateEnum, db: Session) -> Certificates:
+    certificate = fetch_certificate_by_truck_id_and_type(truck_id,certificate_type.value,db)
+    if certificate is None:
+        raise CertificateNotPresentException()
+
+    return certificate
