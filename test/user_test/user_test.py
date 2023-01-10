@@ -64,3 +64,14 @@ def test_invalid_credentials(client_app):
     }
     response = client_app.post("/api/elite/login", data=form_data)
     assert response.status_code == 403
+
+
+def test_correct_credentials(client_app):
+    test_elite_user_strong_password(client_app)
+    login_data = {
+        'username': f'test@{setting.valid_email_allowed}',
+        'password': 'Anirudh@2001$'
+    }
+
+    login_response = client_app.post("/api/elite/login", data=login_data)
+    assert login_response.status_code == 201

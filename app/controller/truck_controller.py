@@ -18,7 +18,6 @@ class TruckController:
     @router.post(path="/api/elite/truck/add", status_code=status.HTTP_201_CREATED)
     async def add_new_truck(self, create_truck_dto: CreateTruckDto):
         """Enter a new Truck details.Each truck will have its own certification"""
-        print(self.user.is_active)
         return await add_truck(create_truck_dto, self.db, self.user)
 
     @router.get(path="/api/elite/truck/fetch", status_code=status.HTTP_200_OK)
