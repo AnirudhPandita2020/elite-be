@@ -13,7 +13,8 @@ from app.utils.env_utils import setting
 async def add_truck(create_truck: CreateTruckDto, db: Session, user: User) -> Truck:
     if user.is_active is False and user.authority_level != int(setting.authority_level):
         raise UserAccessDeniedException()
-
+    if create_truck.site not in setting.allowed_sites:
+        raise InvalidSiteException(create_truck.site)
     new_truck = Truck(**create_truck.dict())
     new_truck.created_by = user.id
     save(new_truck, db)

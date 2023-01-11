@@ -6,3 +6,5 @@ build
 elite_truck.xlsx
 *.pdf
 .pytest_cache
+report/*.html
+report/assets

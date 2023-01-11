@@ -26,10 +26,3 @@ async def start_firebase():
             'storageBucket': firebase_cred.storage_bucket
         }
     )
-
-
-@app.get("/", status_code=200)
-def health_check():
-    return {
-        'status': 'ok'
-    }

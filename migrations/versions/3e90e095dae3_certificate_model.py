@@ -25,5 +25,6 @@ def upgrade() -> None:
         sa.Column('updated_on', sa.DATE(), nullable=False)
     )
 
+
 def downgrade() -> None:
     op.drop_table('certificates')

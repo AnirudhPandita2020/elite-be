@@ -9,11 +9,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from starlette.testclient import TestClient
 
+from app.controller.router import api
 from app.database.database_engine import get_db
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from app.controller.router import api
 
 
 def start_application() -> FastAPI:
@@ -24,7 +23,6 @@ def start_application() -> FastAPI:
 
 DATABASE_URL = "postgresql://postgres:Kuld1972poon@localhost:5432/testing"
 engine = create_engine(DATABASE_URL)
-print(DATABASE_URL)
 
 session_testing = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

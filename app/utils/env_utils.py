@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from typing import List
 
 from dotenv import load_dotenv
 from pydantic import BaseSettings
@@ -19,6 +20,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: str = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
     valid_email_allowed: str = os.getenv("VALID_EMAIL_ALLOWED")
     authority_level: str = os.getenv("AUTHORITY_LEVEL")
+    allowed_sites: List[str] = os.getenv("ALLOWED_SITES")
 
 
 setting = Settings()

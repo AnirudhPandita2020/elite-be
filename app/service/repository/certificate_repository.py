@@ -6,8 +6,9 @@ from sqlalchemy.orm import Session
 from app.models.certificate_model import *
 
 
-def fetch_certificate_by_truck_id_and_type(truck_id: int, cer_type: str, db: Session) -> Certificates:
-    return db.query(Certificates).filter(Certificates.truck_id == truck_id, Certificates.type == cer_type).one_or_none()
+def fetch_certificate_by_truck_id_and_type(truck_id: int, cer_type: str, db: Session) -> List[Certificates]:
+    return db.query(Certificates).filter(Certificates.truck_id == truck_id, Certificates.type == cer_type).order_by(
+        Certificates.updated_on.desc()).all()
 
 
 def fetch_certificate_based_on_truck_id(truck_id: int, db: Session) -> List[Certificates]:
@@ -32,4 +33,3 @@ def save(certificate: Certificates, db: Session) -> Certificates:
         return certificate
     except IntegrityError:
         db.rollback()
-
