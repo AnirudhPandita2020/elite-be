@@ -21,3 +21,7 @@ class UserController:
     async def login_user(self, user_creds: OAuth2PasswordRequestForm = Depends()) -> dict:
         """Logs in a user with a working token"""
         return await login_user(user_creds.username, user_creds.password, self.db)
+
+    @router.get(path="/api/elite/user/fetch", status_code=status.HTTP_200_OK, response_model=UserModel)
+    async def fetch_user_detail(self, user: User = Depends(get_user_from_token)):
+        return user

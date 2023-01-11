@@ -37,6 +37,6 @@ class TruckController:
         # return upload_excel_file_of_trucks(upload_excel, self.user, self.db)
 
     @router.get(path="/api/elite/truck/site", status_code=status.HTTP_200_OK)
-    async def fetch_trucks_based_on_sites(self, site: Sites):
+    async def fetch_trucks_based_on_sites(self, port: Sites):
         """Fetch list of trucks based on the site"""
-        return await fetch_truck_by_site(site, self.db)
+        return await fetch_truck_by_site(port, self.db)
