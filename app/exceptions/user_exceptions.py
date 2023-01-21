@@ -18,7 +18,7 @@ class UserCredentialException(HTTPException):
 
 
 class NotValidEmailException(HTTPException):
-    def __init__(self, message="User creation failed"):
+    def __init__(self, message="Please provide the company email"):
         super().__init__(detail=message, status_code=status.HTTP_403_FORBIDDEN)
 
 

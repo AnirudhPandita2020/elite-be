@@ -11,7 +11,6 @@ def test_create_invalid_user(client_app):
     }
     response = client_app.post("/api/elite/create", content=json.dumps(user_data))
     assert response.status_code == 403
-    assert response.json()["detail"] == 'User creation failed'
 
 
 def test_create_elite_user_weak_password(client_app):

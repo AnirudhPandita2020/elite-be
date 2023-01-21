@@ -3,6 +3,7 @@ from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 
 from app.exceptions.handler.route_handler import RouteErrorHandler
+from app.service.recent_activity_service import get_five_recent_activity
 from app.service.user_service import *
 
 router = InferringRouter(tags=["User Controller"], route_class=RouteErrorHandler)
@@ -13,11 +14,20 @@ class UserController:
     db: Session = Depends(get_db)
 
     @router.post(path="/api/elite/create", status_code=status.HTTP_201_CREATED, response_model=UserModel)
-    async def create_user(self, create_user_dto: CreateUserDto):
+    async def create_user(self, create_user_dto: CreateUserDto, recent_activity_task: BackgroundTasks):
         """Creates a new Elite User"""
-        return await create_user(create_user_dto, self.db)
+        return await create_user(create_user_dto, recent_activity_task, self.db)
 
     @router.post(path="/api/elite/login", status_code=status.HTTP_201_CREATED)
     async def login_user(self, user_creds: OAuth2PasswordRequestForm = Depends()) -> dict:
         """Logs in a user with a working token"""
         return await login_user(user_creds.username, user_creds.password, self.db)
+
+    @router.get(path="/api/elite/user/fetch", status_code=status.HTTP_200_OK, response_model=UserModel)
+    async def fetch_user_detail(self, user: User = Depends(get_user_from_token)):
+        return user
+
+    @router.get(path="/api/elite/user/recent", status_code=status.HTTP_200_OK)
+    async def recent_activity(self, user: User = Depends(get_user_from_token)):
+        """Fetch 5 recent activity done."""
+        return await get_five_recent_activity(self.db)
