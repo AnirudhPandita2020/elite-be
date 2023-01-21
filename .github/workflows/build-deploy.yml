@@ -11,6 +11,45 @@ on:
 
 jobs:
   test_after_push:
+    environment:
+      name: local_testing
+    env:
+      DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}}
+      DATABASE_PORT: ${{secrets.DATABASE_PORT}}
+      DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+      DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+      DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}
+      SECRET_KEY: ${{secrets.SECRET_KEY}}
+      ALGORITHM: ${{secrets.ALGORITHM}}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
+      VALID_EMAIL_ALLOWED: ${{secrets.VALID_EMAIL_ALLOWED}}
+      AUTHORITY_LEVEL: ${{secrets.AUTHORITY_LEVEL}}
+      TYPE: ${{secrets.TYPE}}
+      PROJECT_ID: ${{secrets.PROJECT_ID}}
+      PRIVATE_KEY_ID: ${{secrets.PRIVATE_KEY_ID}}
+      PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+      CLIENT_EMAIL: ${{secrets.CLIENT_EMAIL}}
+      CLIENT_ID: ${{secrets.CLIENT_ID}}
+      AUTH_URI: ${{secrets.AUTH_URI}}
+      TOKEN_URI: ${{secrets.TOKEN_URI}}
+      AUTH_PROVIDER_X509_CERT_URL: ${{secrets.AUTH_PROVIDER_X509_CERT_URL}}
+      CLIENT_X509_CERT_URL: ${{secrets.CLIENT_X509_CERT_URL}}
+      STORAGE_BUCKET: ${{secrets.STORAGE_BUCKET}}
+      ALLOWED_SITES: ${{secrets.ALLOWED_SITES}}
+      ALLOWED_ACTION: ${{secrets.ALLOWED_ACTION}}
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          POSTGRES_DB: testing
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     runs-on: ubuntu-latest
     steps:
       - name: pull git repo
@@ -23,4 +62,7 @@ jobs:
         run: python -m pip install --upgrade pip
       - name: install all dependencies
         run: pip install -r requirements.txt
+      - name: unit test
+        run: |
+          pytest -v
 

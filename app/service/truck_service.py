@@ -1,16 +1,18 @@
 import shutil
 
+from fastapi import BackgroundTasks
 from fastapi import UploadFile
 from openpyxl import load_workbook
 
 from app.exceptions.truck_exceptions import *
 from app.exceptions.user_exceptions import *
 from app.models.user_model import User
+from app.service.recent_activity_service import add_truck_activity
 from app.service.repository.truck_repository import *
 from app.utils.env_utils import setting
 
 
-async def add_truck(create_truck: CreateTruckDto, db: Session, user: User) -> Truck:
+async def add_truck(create_truck: CreateTruckDto, recent_activity: BackgroundTasks, db: Session, user: User) -> Truck:
     if user.is_active is False and user.authority_level != int(setting.authority_level):
         raise UserAccessDeniedException()
     if create_truck.site not in setting.allowed_sites:
@@ -18,6 +20,7 @@ async def add_truck(create_truck: CreateTruckDto, db: Session, user: User) -> Tr
     new_truck = Truck(**create_truck.dict())
     new_truck.created_by = user.id
     save(new_truck, db)
+    recent_activity.add_task(add_truck_activity, truck=new_truck, db=db)
     return new_truck
 
 
@@ -30,6 +33,14 @@ async def fetch_truck_by_id(truck_id: int, db: Session) -> Truck:
 
 async def fetch_truck_by_site(site: Sites, db: Session) -> List[Truck]:
     return findTrucksBySite(site, db)
+
+
+async def fetch_truck_by_trailer_number(number: str, db: Session) -> Truck:
+    return findByTrailerNumber(number, db)
+
+
+async def fetch_truckIds_of_site(site: str, db: Session):
+    return fetch_truck_id_by_site(site, db)
 
 
 def upload_excel_file_of_trucks(file: UploadFile, user: User, db: Session):

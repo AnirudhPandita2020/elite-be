@@ -7,7 +7,6 @@ from app.utils.env_utils import setting
 SQL_DATABASE_URL = "postgresql://{}:{}@{}/{}".format(setting.database_username, setting.database_password,
                                                      setting.database_hostname + ":" + setting.database_port,
                                                      setting.database_name)
-print(SQL_DATABASE_URL)
 
 engine = create_engine(SQL_DATABASE_URL)
 

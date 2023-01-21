@@ -16,9 +16,9 @@ class TruckController:
     user: User = Depends(get_user_from_token)
 
     @router.post(path="/api/elite/truck/add", status_code=status.HTTP_201_CREATED)
-    async def add_new_truck(self, create_truck_dto: CreateTruckDto):
+    async def add_new_truck(self, create_truck_dto: CreateTruckDto, recent_activity_task: BackgroundTasks):
         """Enter a new Truck details.Each truck will have its own certification"""
-        return await add_truck(create_truck_dto, self.db, self.user)
+        return await add_truck(create_truck_dto, recent_activity_task, self.db, self.user)
 
     @router.get(path="/api/elite/truck/fetch", status_code=status.HTTP_200_OK)
     async def fetch_truck(self, truck_id: str):
@@ -40,3 +40,7 @@ class TruckController:
     async def fetch_trucks_based_on_sites(self, port: Sites):
         """Fetch list of trucks based on the site"""
         return await fetch_truck_by_site(port, self.db)
+
+    @router.get(path="/api/elite/truck/all", status_code=status.HTTP_200_OK)
+    async def fetch_all_trucks(self):
+        return self.db.query(Truck).all()

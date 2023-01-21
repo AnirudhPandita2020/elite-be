@@ -21,6 +21,14 @@ def findTrucksBySite(sites: Sites, db: Session) -> List[Truck]:
     return db.query(Truck).filter(Truck.site == sites.value).all()
 
 
+def findByTrailerNumber(number: str, db: Session) -> Truck:
+    return db.query(Truck).filter(Truck.trailer_number == number.upper()).one_or_none()
+
+
+def fetch_truck_id_by_site(site: str, db: Session):
+    return db.query(Truck).filter(Truck.site == site).all()
+
+
 def findTruckByTrailerNumber(trailer_number: str, db: Session) -> Truck:
     return db.query(Truck).filter(Truck.trailer_number == trailer_number).one_or_none()
 
