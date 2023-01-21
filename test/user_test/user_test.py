@@ -10,7 +10,6 @@ def test_create_invalid_user(client_app):
         "name": "anirudh"
     }
     response = client_app.post("/api/elite/create", content=json.dumps(user_data))
-    print(response.json()['details'])
     assert response.status_code == 403
 
 
