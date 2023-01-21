@@ -11,6 +11,10 @@ from starlette.testclient import TestClient
 
 from app.controller.router import api
 from app.database.database_engine import get_db
+from app.models.certificate_model import Base as certificate_base
+from app.models.recent_activity_model import Base as recent_base
+from app.models.truck_model import Base as truck_base
+from app.models.user_model import Base as user_base
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -29,6 +33,10 @@ session_testing = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 @pytest.fixture(scope="module")
 def app() -> Generator[FastAPI, Any, None]:
+    user_base.metadata.create_all(bind=engine)
+    truck_base.metadata.create_all(bind=engine)
+    certificate_base.metadata.create_all(bind=engine)
+    recent_base.metadata.create_all(bind=engine)
     _app = start_application()
     yield _app
 
