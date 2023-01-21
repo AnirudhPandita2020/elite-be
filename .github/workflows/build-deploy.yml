@@ -11,7 +11,7 @@ on:
 
 jobs:
   test_after_push:
-    environments:
+    environment:
       name: local_testing
     env:
       DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}}
