@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     valid_email_allowed: str = os.getenv("VALID_EMAIL_ALLOWED")
     authority_level: str = os.getenv("AUTHORITY_LEVEL")
     allowed_sites: List[str] = os.getenv("ALLOWED_SITES")
+    allowed_action: List[str] = os.getenv("ALLOWED_ACTION")
 
 
 setting = Settings()

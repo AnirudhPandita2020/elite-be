@@ -17,3 +17,6 @@ def save(user: User, db: Session) -> User:
 def findByEmail(email: str, db: Session) -> User:
     return db.query(User).filter(User.email == email).one_or_none()
 
+
+def findById(user_id: int, db: Session) -> User:
+    return db.query(User).filter(User.id == user_id).one_or_none()

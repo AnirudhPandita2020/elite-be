@@ -10,6 +10,7 @@ class Certificates(Base):
     type = Column(String, nullable=False)
     certificate_link = Column(String, nullable=False)
     updated_on = Column(DATE, nullable=False)
+    validity_till = Column(DATE, nullable=False)
 
 
 class CertificateHistory(Base):

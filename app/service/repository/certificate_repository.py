@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Tuple
 
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -33,3 +34,17 @@ def save(certificate: Certificates, db: Session) -> Certificates:
         return certificate
     except IntegrityError:
         db.rollback()
+
+
+def fetch_latest_certificate_of_all_type(truck_id, db: Session) -> List[Tuple]:
+    return db.query(
+        Certificates.type,
+        func.max(Certificates.validity_till).label('validity_till')
+    ).filter(Certificates.truck_id == truck_id).group_by(Certificates.type).all()
+
+
+def fetch_latest_updated_certificate(truck_id: int, db: Session):
+    return db.query(
+        Certificates.type,
+        func.max(Certificates.updated_on).label('updated_on')
+    ).filter(Certificates.truck_id == truck_id).group_by(Certificates.type).all()
