@@ -6,6 +6,7 @@ from firebase_admin import credentials
 from app.controller.router.api import main_router
 from app.database.database_engine import sessionLocal
 from app.jobs.expire_certificate import check_expire_certificate_of_trucks
+from app.jobs.notifications.elite_email import send_email
 from app.utils.env_utils import firebase_cred
 
 app = FastAPI(
@@ -36,4 +37,5 @@ async def start_firebase():
 async def elite_background_jobs():
     """Task to be executed every 24 hours"""
     with sessionLocal() as db:
-        print(await check_expire_certificate_of_trucks(db=db))
+        truck_list = await check_expire_certificate_of_trucks(db=db)
+        await send_email(truck_list)
