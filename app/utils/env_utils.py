@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     email_password: str = os.getenv("EMAIL_PASSWORD")
     sender_email: str = os.getenv("SENDER_EMAIL")
     receiver_email: str = os.getenv("RECEIVER_EMAIL")
+    cc_emails: List[str] = os.getenv("CC_EMAILS")
 
 
 setting = Settings()

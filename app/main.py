@@ -38,4 +38,5 @@ async def elite_background_jobs():
     """Task to be executed every 24 hours"""
     with sessionLocal() as db:
         truck_list = await check_expire_certificate_of_trucks(db=db)
-        await send_email(truck_list)
+        if len(truck_list) != 0:
+            await send_email(truck_list)

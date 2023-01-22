@@ -29,6 +29,7 @@ async def send_email(truck_list: List):
     reminder_email['From'] = email_sender
     reminder_email['To'] = email_receiver
     reminder_email['Subject'] = subject
+    reminder_email['Cc'] = ", ".join(setting.cc_emails)
     reminder_email.set_content(body + line_value + regards)
 
     context = ssl.create_default_context()
