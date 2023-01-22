@@ -10,6 +10,7 @@ load_dotenv(dotenv_path=env_path)
 
 
 class Settings(BaseSettings):
+    profile: str = os.getenv("PROFILE")
     database_hostname: str = os.getenv("DATABASE_HOSTNAME")
     database_port: str = os.getenv("DATABASE_PORT")
     database_password: str = os.getenv("DATABASE_PASSWORD")
@@ -26,6 +27,7 @@ class Settings(BaseSettings):
     sender_email: str = os.getenv("SENDER_EMAIL")
     receiver_email: str = os.getenv("RECEIVER_EMAIL")
     cc_emails: List[str] = os.getenv("CC_EMAILS")
+    storage_bucket: str = os.getenv("STORAGE_BUCKET")
 
 
 setting = Settings()
@@ -42,7 +44,6 @@ class Firebase(BaseSettings):
     token_uri: str = os.getenv("TOKEN_URI")
     auth_provider_x509_cert_url: str = os.getenv("AUTH_PROVIDER_X509_CERT_URL")
     client_x509_cert_url: str = os.getenv("CLIENT_X509_CERT_URL")
-    storage_bucket: str = os.getenv("STORAGE_BUCKET")
 
 
 firebase_cred = Firebase()

@@ -7,7 +7,7 @@ from app.controller.router.api import main_router
 from app.database.database_engine import sessionLocal
 from app.jobs.expire_certificate import check_expire_certificate_of_trucks
 from app.jobs.notifications.elite_email import send_email
-from app.utils.env_utils import firebase_cred
+from app.utils.env_utils import firebase_cred, setting
 
 app = FastAPI(
     title="Elite Vehicle Certificate Manager",
@@ -25,11 +25,18 @@ app.include_router(main_router)
 
 @app.on_event("startup")
 async def start_firebase():
-    firebase_admin.initialize_app(
-        credentials.Certificate(firebase_cred.dict()), {
-            'storageBucket': firebase_cred.storage_bucket
-        }
-    )
+    if setting.profile == 'LOCAL':
+        firebase_admin.initialize_app(
+            credentials.Certificate(firebase_cred.dict()), {
+                'storageBucket': setting.storage_bucket
+            }
+        )
+    else:
+        firebase_admin.initialize_app(
+            'dev-elite-key.json', {
+                'storageBucket': setting.storage_bucket
+            }
+        )
 
 
 @app.on_event("startup")
