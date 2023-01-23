@@ -20,7 +20,7 @@ async def add_truck(create_truck: CreateTruckDto, recent_activity: BackgroundTas
     new_truck = Truck(**create_truck.dict())
     new_truck.created_by = user.id
     save(new_truck, db)
-    recent_activity.add_task(add_truck_activity, truck=new_truck, db=db)
+    recent_activity.add_task(add_truck_activity, truck=new_truck, db=db, action="ADD")
     return new_truck
 
 
@@ -54,7 +54,8 @@ def upload_excel_file_of_trucks(file: UploadFile, user: User, db: Session):
     return truck_list
 
 
-async def update_truck_detail(truck_id: int, update_truck_dto: CreateTruckDto, user: User, db: Session) -> Truck:
+async def update_truck_detail(truck_id: int, update_truck_dto: CreateTruckDto, user: User, db: Session,
+                              recent_activity: BackgroundTasks) -> Truck:
     if user.is_active is False and user.authority_level != int(setting.authority_level):
         raise UserAccessDeniedException()
     truck = findTruckById(truck_id, db)
@@ -63,4 +64,6 @@ async def update_truck_detail(truck_id: int, update_truck_dto: CreateTruckDto, u
     if truck.created_by != user.id:
         raise UserAccessDeniedException()
 
-    return updateTruckDetail(truck_id, update_truck_dto, db)
+    truck = updateTruckDetail(truck_id, update_truck_dto, db)
+    recent_activity.add_task(add_truck_activity, truck=truck, db=db, action="MODIFY")
+    return truck
