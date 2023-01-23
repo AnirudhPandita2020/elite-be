@@ -76,6 +76,4 @@ jobs:
           username: ${{secrets.DEV_USERNAME}}
           password: ${{secrets.DEV_PASSWORD}}
           script: |
-            cd dev/src
-            git pull
-            echo ${{secrets.DEV_PASSWORD}} | sudo -S systemctl restart elite
+            whoami
