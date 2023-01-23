@@ -64,6 +64,8 @@ jobs:
           pytest -v
 
   deploy:
+    environment:
+      name: dev_env
     runs-on: ubuntu-latest
     needs: [build]
     steps:
@@ -76,4 +78,6 @@ jobs:
           username: ${{secrets.DEV_USERNAME}}
           password: ${{secrets.DEV_PASSWORD}}
           script: |
-            whoami
+            cd dev/src
+            git pull
+            echo ${{secrets.DEV_PASSWORD}} | sudo -S systemctl restart elite
