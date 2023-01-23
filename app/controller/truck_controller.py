@@ -26,9 +26,9 @@ class TruckController:
         return await fetch_truck_by_id(int(truck_id), self.db)
 
     @router.put(path="/api/elite/truck/update", status_code=status.HTTP_200_OK)
-    async def update_truck(self, truck_id: str, truck_dto: CreateTruckDto):
+    async def update_truck(self, truck_id: str, truck_dto: CreateTruckDto,recent_activity_task: BackgroundTasks):
         """Updates the data of a particular truck id"""
-        return await update_truck_detail(int(truck_id), truck_dto, self.user, self.db)
+        return await update_truck_detail(int(truck_id), truck_dto, self.user, self.db,recent_activity_task)
 
     @router.post(path="/api/elite/truck/upload", status_code=status.HTTP_201_CREATED)
     def upload_truck_excel(self, upload_excel: UploadFile):

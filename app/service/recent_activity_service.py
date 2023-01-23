@@ -18,8 +18,7 @@ async def add_user_activity(name: str, db: Session):
     save(recent_activity, db)
 
 
-async def add_truck_activity(truck: Truck, db: Session):
-    action = setting.allowed_action[0]
+async def add_truck_activity(truck: Truck, db: Session, action: str):
     recent_activity = RecentActivity()
     recent_activity.activity_type = action
     recent_activity.done_by = findById(truck.created_by, db).email
