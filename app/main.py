@@ -33,7 +33,7 @@ async def start_firebase():
         )
     else:
         firebase_admin.initialize_app(
-            'dev-elite-key.json', {
+            credentials.Certificate('key.json'), {
                 'storageBucket': setting.storage_bucket
             }
         )

@@ -8,3 +8,4 @@ elite_truck.xlsx
 .pytest_cache
 report/*.html
 report/assets
+key.json
