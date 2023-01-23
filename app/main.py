@@ -34,7 +34,7 @@ async def start_firebase():
     else:
         firebase_admin.initialize_app(
             credentials.Certificate('key.json'), {
-                'app/storageBucket': setting.storage_bucket
+                'storageBucket': setting.storage_bucket
             }
         )
 
