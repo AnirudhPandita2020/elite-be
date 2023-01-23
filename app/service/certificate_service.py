@@ -9,6 +9,7 @@ from firebase_admin import storage
 from app.exceptions.certificate_exceptions import *
 from app.exceptions.truck_exceptions import TruckNotPresentException
 from app.exceptions.user_exceptions import UserAccessDeniedException
+from app.models.truck_model import Truck
 from app.models.user_model import User
 from app.service.recent_activity_service import add_certificate_activity
 from app.service.repository.certificate_repository import *
@@ -45,12 +46,12 @@ async def fetch_certificate_of_truck(truck_id: int, db: Session):
     return fetch_certificate_based_on_truck_id(truck_id, db)
 
 
-async def fetch_url_of_certificate(file: UploadFile, trailer_number: str, certificate_type: str, validity: str):
+async def fetch_url_of_certificate(file: UploadFile, trailer_number: Truck, certificate_type: str, validity: str):
     extension = file.filename.split('.')[1]
     if extension != 'pdf':
         raise CertificateFormatException()
 
-    formatted_file_name = f'{trailer_number}_{certificate_type}_{validity}.pdf'
+    formatted_file_name = f'{trailer_number.trailer_number}_{certificate_type}_{validity}.pdf'
     with open(formatted_file_name, 'wb') as file_buffer:
         shutil.copyfileobj(file.file, file_buffer)
 
