@@ -48,7 +48,7 @@ async def fetch_certificate_of_truck(truck_id: int, db: Session):
 
 async def fetch_url_of_certificate(file: UploadFile, trailer_number: Truck, certificate_type: str, validity: str):
     file_mime_type = file.content_type
-    if file_mime_type != 'application/pdf':
+    if file.filename[::-1][0:4] != 'fdp.':
         raise CertificateFormatException()
 
     formatted_file_name = f'{trailer_number.trailer_number}_{certificate_type}_{validity}.pdf'
@@ -63,7 +63,8 @@ async def fetch_url_of_certificate(file: UploadFile, trailer_number: Truck, cert
     return file_blob.public_url
 
 
-async def fetch_certificate_site_based(truck_id: int, certificate_type: CertificateEnum, db: Session) -> List[Certificates]:
+async def fetch_certificate_site_based(truck_id: int, certificate_type: CertificateEnum, db: Session) -> List[
+    Certificates]:
     certificate = fetch_certificate_by_truck_id_and_type(truck_id, certificate_type.value, db)
     if certificate is None:
         raise CertificateNotPresentException()
