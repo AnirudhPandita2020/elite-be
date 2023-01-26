@@ -7,7 +7,6 @@ from app.dto.certificate_dto import CertificateResponse
 from app.exceptions.handler.route_handler import RouteErrorHandler
 from app.security.oauth2_bearer import get_user_from_token
 from app.service.certificate_service import *
-from app.utils.enums import Sites
 
 router = InferringRouter(tags=["Certificate Controller"], route_class=RouteErrorHandler)
 
@@ -39,3 +38,8 @@ class CertificateController:
     async def fetch_latest_certificate_of_truck(self, truck_id: str):
         """Fetches the latest certificate of all category for a given trailer number"""
         return await fetch_latest_updated_on(int(truck_id), self.db)
+
+    @router.delete(path="/api/elite/certificate/remove", status_code=status.HTTP_204_NO_CONTENT)
+    async def delete_certificate(self, certificate_token: str, certificate_type: CertificateEnum):
+        """Deletes a particular certificate"""
+        pass

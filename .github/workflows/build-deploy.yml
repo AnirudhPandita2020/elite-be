@@ -80,5 +80,4 @@ jobs:
           script: |
             cd dev/src
             git pull
-            alembic upgrade head
             echo ${{secrets.DEV_PASSWORD}} | sudo -S systemctl restart elite

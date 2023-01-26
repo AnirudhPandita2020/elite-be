@@ -82,3 +82,7 @@ async def fetch_latest_certificate_for_all_trucks(truck_id: int, db: Session):
 
 async def fetch_latest_updated_on(truck_id: int, db: Session):
     return fetch_latest_certificate_of_all_type(truck_id, db)
+
+
+async def delete_certificate(truck_id: int, certificate_type: str, db: Session):
+    pass
