@@ -28,6 +28,10 @@ async def upload_certificate(truck_id: int, certificate_file: UploadFile, certif
     if findTruckById(truck_id, db) is None:
         raise TruckNotPresentException()
 
+    latest_certificate = fetch_latest_certificate_by_type(truck_id, certificate_type.value, db)
+    if datetime.datetime.strptime(validity, "%Y-%m-%d").date() < latest_certificate[0].validity_till:
+        raise CertificateValidityException()
+
     new_certificate = Certificates()
     new_certificate.validity_till = datetime.datetime.strptime(validity, "%Y-%m-%d").date()
     new_certificate.certificate_id = certificate_id()

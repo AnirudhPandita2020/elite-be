@@ -16,7 +16,7 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.add_column('truck', sa.Column('engine', sa.String(), nullable=False))
+    op.add_column('truck', sa.Column('engine', sa.String(), nullable=True))
 
 
 def downgrade() -> None:

@@ -7,6 +7,7 @@ from app.controller.router.api import main_router
 from app.database.database_engine import sessionLocal
 from app.jobs.expire_certificate import check_expire_certificate_of_trucks
 from app.jobs.notifications.elite_email import send_email
+from app.service.notification_service import send_notification
 from app.utils.env_utils import firebase_cred, setting
 
 app = FastAPI(
@@ -46,4 +47,5 @@ async def elite_background_jobs():
     with sessionLocal() as db:
         truck_list = await check_expire_certificate_of_trucks(db=db)
         if len(truck_list) != 0:
+            await send_notification(db, len(truck_list))
             await send_email(truck_list)

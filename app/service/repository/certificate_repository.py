@@ -12,6 +12,11 @@ def fetch_certificate_by_truck_id_and_type(truck_id: int, cer_type: str, db: Ses
         Certificates.updated_on.desc()).all()
 
 
+def fetch_latest_certificate_by_type(truck_id: int, cer_type: str, db: Session) -> List[Certificates]:
+    return db.query(Certificates).filter(Certificates.truck_id == truck_id, Certificates.type == cer_type).order_by(
+        Certificates.updated_on.desc()).limit(1).all()
+
+
 def fetch_certificate_based_on_truck_id(truck_id: int, db: Session) -> List[Certificates]:
     return db.query(Certificates).filter(Certificates.truck_id == truck_id).all()
 

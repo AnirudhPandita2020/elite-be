@@ -23,7 +23,6 @@ async def send_email(truck_list: List):
         for data in trucks['data']:
             line_value += f"Trailer Number: {trucks['trailer_number']}\nValidity: {data['validity']}\nCertificate Type: {data['type']}\n\n"
     regards = "\nRegards,\n\nTruck & Trailer Management System\nElite Shipping Agencies India PVT LTD"
-    print(body + line_value + regards)
 
     reminder_email = EmailMessage()
     reminder_email['From'] = email_sender
