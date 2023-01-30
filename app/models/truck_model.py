@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, text, ForeignKey, TEXT
+from sqlalchemy import Column, Integer, String, TIMESTAMP, text, ForeignKey, TEXT, Boolean
 
 from app.database.database_engine import Base
 
@@ -17,3 +17,4 @@ class Truck(Base):
     created_on = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
     created_by = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     certificate_disabled = Column(TEXT, nullable=True)
+    is_active = Column(Boolean, server_default='True')

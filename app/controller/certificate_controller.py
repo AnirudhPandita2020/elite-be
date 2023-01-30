@@ -40,6 +40,7 @@ class CertificateController:
         return await fetch_latest_updated_on(int(truck_id), self.db)
 
     @router.delete(path="/api/elite/certificate/remove", status_code=status.HTTP_204_NO_CONTENT)
-    async def delete_certificate(self, certificate_token: str, certificate_type: CertificateEnum):
+    async def delete_certificate(self, truck_id: str, certificate_type: CertificateEnum,
+                                 recent_activity_task: BackgroundTasks):
         """Deletes a particular certificate"""
-        pass
+        return await delete_certificate(int(truck_id), self.user.email, certificate_type, self.db, recent_activity_task)

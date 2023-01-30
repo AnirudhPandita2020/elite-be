@@ -7,7 +7,9 @@ from openpyxl import load_workbook
 from app.exceptions.truck_exceptions import *
 from app.exceptions.user_exceptions import *
 from app.models.user_model import User
-from app.service.recent_activity_service import add_truck_activity
+from app.service.recent_activity_service import add_truck_activity, clear_certificate_from_storage, \
+    delete_truck_activity
+from app.service.repository.certificate_repository import fetch_all_certificates_of_truck
 from app.service.repository.truck_repository import *
 from app.utils.env_utils import setting
 
@@ -67,3 +69,29 @@ async def update_truck_detail(truck_id: int, update_truck_dto: CreateTruckDto, u
     truck = updateTruckDetail(truck_id, update_truck_dto, db)
     recent_activity.add_task(add_truck_activity, truck=truck, db=db, action="MODIFY")
     return truck
+
+
+async def delete_truck(trailer_number: str, user: User, db: Session, recent_activity_task: BackgroundTasks):
+    truck = findTruckByTrailerNumber(trailer_number, db)
+    if not truck:
+        raise TruckNotPresentException()
+    # Even though certificates will be deleted automatically in the table, we have to also clear storage too
+    truck_certificate_list = fetch_all_certificates_of_truck(truck.truck_id, db)
+    certificate_name = [certificate.certificate_file_name for certificate in truck_certificate_list if
+                        certificate.certificate_file_name is not None]
+
+    deleteTruck(trailer_number, db)
+    recent_activity_task.add_task(delete_truck_activity, email=user.email, trailer_number=trailer_number, db=db)
+    recent_activity_task.add_task(clear_certificate_from_storage, file_name_list=certificate_name, db=db,
+                                  trailer_number=trailer_number)
+
+
+async def enable_disable_truck(trailer_number: str, db: Session):
+    truck = findTruckByTrailerNumber(trailer_number, db)
+    if truck is None:
+        raise TruckNotPresentException()
+
+    update_active_status_by_trailer_number(trailer_number, db, not truck.is_active)
+
+    return {'message': f'{trailer_number} has been disabled'} if not truck.is_active else {
+        'message': f'{trailer_number} has been enabled'}

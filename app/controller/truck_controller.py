@@ -26,9 +26,9 @@ class TruckController:
         return await fetch_truck_by_id(int(truck_id), self.db)
 
     @router.put(path="/api/elite/truck/update", status_code=status.HTTP_200_OK)
-    async def update_truck(self, truck_id: str, truck_dto: CreateTruckDto,recent_activity_task: BackgroundTasks):
+    async def update_truck(self, truck_id: str, truck_dto: CreateTruckDto, recent_activity_task: BackgroundTasks):
         """Updates the data of a particular truck id"""
-        return await update_truck_detail(int(truck_id), truck_dto, self.user, self.db,recent_activity_task)
+        return await update_truck_detail(int(truck_id), truck_dto, self.user, self.db, recent_activity_task)
 
     @router.post(path="/api/elite/truck/upload", status_code=status.HTTP_201_CREATED)
     def upload_truck_excel(self, upload_excel: UploadFile):
@@ -44,3 +44,13 @@ class TruckController:
     @router.get(path="/api/elite/truck/all", status_code=status.HTTP_200_OK)
     async def fetch_all_trucks(self):
         return self.db.query(Truck).all()
+
+    @router.delete(path="/api/elite/truck/delete", status_code=status.HTTP_204_NO_CONTENT)
+    async def delete_truck(self, trailer_number: str, recent_activity_task: BackgroundTasks):
+        """Removes a truck given by its trailer_number"""
+        return await delete_truck(trailer_number, self.user, self.db, recent_activity_task)
+
+    @router.put(path="/api/elite/truck")
+    async def enable_disable_truck(self, trailer_number: str):
+        """Changes the status of the truck"""
+        return await enable_disable_truck(trailer_number,self.db)

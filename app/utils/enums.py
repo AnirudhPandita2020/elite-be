@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class CertificateEnum(Enum):
+class CertificateEnum(str, Enum):
     road_tax = "Road Tax"
     fitness_certificate = "Fitness Certificate"
     goods_certificate_permission = "Goods Carrier Permission"

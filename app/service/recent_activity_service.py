@@ -1,3 +1,6 @@
+from typing import List
+
+from firebase_admin import storage
 from sqlalchemy.orm import Session
 
 from app.models.certificate_model import Certificates
@@ -38,3 +41,37 @@ async def add_certificate_activity(certificate: Certificates, db: Session):
 
 async def get_five_recent_activity(db: Session):
     return fetch_five_latest_activity(db)
+
+
+async def delete_truck_activity(email: str, trailer_number: str, db: Session):
+    action = setting.allowed_action[2]
+    recent_activity = RecentActivity()
+    recent_activity.activity_type = action
+    recent_activity.done_by = email
+    recent_activity.work_on = trailer_number
+    save(recent_activity, db)
+
+
+async def delete_certificate_activity(email: str, trailer_number: str, certificate_type: str, db: Session):
+    action = setting.allowed_action[2]
+    recent_activity = RecentActivity()
+    recent_activity.activity_type = action
+    recent_activity.done_by = email
+    recent_activity.work_on = f'{certificate_type} ${trailer_number}'
+    save(recent_activity, db)
+
+
+async def clear_certificate_from_storage(file_name_list: List[str], db: Session, trailer_number: str):
+    storage_bucket = storage.bucket()
+    file_blob_list = []
+    for file in file_name_list:
+        file_blob_list.append(storage_bucket.blob(file))
+
+    storage_bucket.delete_blobs(file_blob_list)
+
+    action = setting.allowed_action[2]
+    recent_activity = RecentActivity()
+    recent_activity.activity_type = action
+    recent_activity.done_by = "System"
+    recent_activity.work_on = f"Certificates {trailer_number}"
+    save(recent_activity, db)

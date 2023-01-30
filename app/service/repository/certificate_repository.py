@@ -63,3 +63,7 @@ def delete_certificate_by_id(certificate_id: str, certificate_type: str, db: Ses
     db.query(Certificates).filter(Certificates.certificate_id == certificate_id,
                                   Certificates.type == certificate_type).delete(synchronize_session=False)
     db.commit()
+
+
+def fetch_all_certificates_of_truck(truck_id: int, db: Session) -> List[Certificates]:
+    return db.query(Certificates).filter(Certificates.truck_id == truck_id).all()
