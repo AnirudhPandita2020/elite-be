@@ -4,6 +4,7 @@ from fastapi_utils.inferring_router import InferringRouter
 
 from app.database.database_engine import get_db
 from app.exceptions.handler.route_handler import RouteErrorHandler
+from app.jobs.expire_certificate import check_expire_certificate_of_trucks
 from app.security.oauth2_bearer import get_user_from_token
 from app.service.truck_service import *
 
@@ -53,4 +54,9 @@ class TruckController:
     @router.put(path="/api/elite/truck")
     async def enable_disable_truck(self, trailer_number: str):
         """Changes the status of the truck"""
-        return await enable_disable_truck(trailer_number,self.db)
+        return await enable_disable_truck(trailer_number, self.db)
+
+    @router.get(path="/api/elite/truck/expiring", status_code=status.HTTP_200_OK)
+    async def get_expiring_trucks(self):
+        """Returns the list of the trucks having expiring certificate"""
+        return await check_expire_certificate_of_trucks(db=self.db)
