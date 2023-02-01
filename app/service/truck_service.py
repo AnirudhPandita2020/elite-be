@@ -75,6 +75,8 @@ async def delete_truck(trailer_number: str, user: User, db: Session, recent_acti
     truck = findTruckByTrailerNumber(trailer_number, db)
     if not truck:
         raise TruckNotPresentException()
+    if user.is_active is False and user.authority_level != int(setting.authority_level):
+        raise UserAccessDeniedException()
     # Even though certificates will be deleted automatically in the table, we have to also clear storage too
     truck_certificate_list = fetch_all_certificates_of_truck(truck.truck_id, db)
     certificate_name = [certificate.certificate_file_name for certificate in truck_certificate_list if
