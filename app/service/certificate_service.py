@@ -54,7 +54,7 @@ async def fetch_certificate_of_truck(truck_id: int, db: Session):
 
 
 async def fetch_url_of_certificate(file: UploadFile, truck: Truck, certificate_type: str, validity: str):
-    if file.filename[::-1][0:4] != 'fdp.':
+    if file.content_type != "application/pdf":
         raise CertificateFormatException()
 
     formatted_file_name = f'{truck.trailer_number}_{certificate_type}_{validity}.pdf'
