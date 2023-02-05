@@ -102,6 +102,7 @@ async def delete_certificate(truck_id: int, email: str, certificate_type: Certif
         file_blob_list.append(storage_bucket.blob(file))
 
     storage_bucket.delete_blobs(file_blob_list)
+    delete_certificate_by_type_and_truck_id(truck_id, certificate_type.value, db)
     recent_activity_task.add_task(delete_certificate_activity, email=email,
                                   trailer_number=findTruckById(truck_id, db).trailer_number,
                                   certificate_type=certificate_type.value, db=db)

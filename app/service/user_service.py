@@ -1,4 +1,8 @@
-from fastapi import BackgroundTasks
+import os
+import shutil
+
+from fastapi import BackgroundTasks, UploadFile
+from firebase_admin import storage
 
 from app.dto.user_dto import *
 from app.exceptions.user_exceptions import *
@@ -34,3 +38,24 @@ async def login_user(username: str, password: str, db: Session) -> dict:
 
     access_token = create_bearer_token(data={'user_id': user.id})
     return {'access_token': access_token, 'type': 'bearer'}
+
+
+async def upload_profile_pic(user: User, db: Session, profile_picture: UploadFile):
+    if "image/" not in profile_picture.content_type:
+        raise InvalidProfilePhotoException()
+    formatted_profile_name = f'{user.email}.{profile_picture.filename.split(".")[1]}'
+    with open(formatted_profile_name, 'wb') as file_buffer:
+        shutil.copyfileobj(profile_picture.file, file_buffer)
+
+    storage_bucket = storage.bucket()
+    profile_blob = storage_bucket.blob(formatted_profile_name)
+    profile_blob.upload_from_filename(formatted_profile_name)
+    profile_blob.make_public()
+    os.unlink(formatted_profile_name)
+    addProfileUrl(profile_blob.public_url, db, user)
+
+    return {'message': "Profile photo added"}
+
+
+async def fetch_user_list(is_active: bool, db: Session):
+    return fetchUserList(is_active, db)

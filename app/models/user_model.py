@@ -12,4 +12,4 @@ class User(Base):
     authority_level = Column(Integer, nullable=False, server_default='0')
     is_active = Column(Boolean, server_default='False')
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
-
+    profile_photo = Column(String, nullable=True)

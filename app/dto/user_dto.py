@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel, EmailStr
 
@@ -12,8 +13,8 @@ class CreateUserDto(BaseModel):
 class UserModel(BaseModel):
     email: EmailStr
     name: str
-    authority_level = int
     created_at: datetime
+    profile_photo: Optional[str] | None
     is_active: bool
 
     class Config:

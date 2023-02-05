@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
@@ -31,3 +33,18 @@ class UserController:
     async def recent_activity(self, user: User = Depends(get_user_from_token)):
         """Fetch 5 recent activity done."""
         return await get_five_recent_activity(self.db)
+
+    @router.post(path="/api/elite/user/profile", status_code=status.HTTP_201_CREATED)
+    async def upload_profile_picture(self, profile_picture: UploadFile, user: User = Depends(get_user_from_token)):
+        """Upload a profile picture for user"""
+        return await upload_profile_pic(user, self.db, profile_picture)
+
+    @router.put(path="/api/elite/user/access", status_code=status.HTTP_200_OK)
+    async def provide_access_to_user(self, email: str, user: User = Depends(get_user_from_token)):
+        """Provide access to a user (Drive -> Manager)"""
+        pass
+
+    @router.get(path="/api/elite/user", status_code=status.HTTP_200_OK, response_model=List[UserModel])
+    async def get_inactive_user(self, is_active: bool, user: User = Depends(get_user_from_token)):
+        """Fetch list of user currently inactive"""
+        return await fetch_user_list(is_active, self.db)
