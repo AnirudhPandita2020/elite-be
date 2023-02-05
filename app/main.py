@@ -2,7 +2,7 @@ import firebase_admin
 from fastapi import FastAPI
 from fastapi_utils.tasks import repeat_every
 from firebase_admin import credentials
-# from uvicorn.workers import UvicornWorker
+from uvicorn.workers import UvicornWorker
 
 from app.controller.router.api import main_router
 from app.database.database_engine import sessionLocal
@@ -52,7 +52,7 @@ async def elite_background_jobs():
             await send_email(truck_list)
 
 
-# class EliteUvicornWorker(UvicornWorker):
-#     CONFIG_KWARGS = {
-#         "log_config": "log/logging.yaml",
-#     }
+class EliteUvicornWorker(UvicornWorker):
+    CONFIG_KWARGS = {
+        "log_config": "log/logging.yaml",
+    }
