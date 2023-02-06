@@ -89,4 +89,4 @@ def test_role_reversal(client_app, local_database_session):
     response = client_app.put(f"/api/elite/user/access?email=test@{setting.valid_email_allowed}",
                               headers={'Authorization': f'Bearer {token}'})
     print(response.json())
-    assert response.status_code == 200
+    assert response.status_code == 403
