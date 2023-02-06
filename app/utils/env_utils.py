@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     receiver_email: str = os.getenv("RECEIVER_EMAIL")
     cc_emails: List[str] = os.getenv("CC_EMAILS")
     storage_bucket: str = os.getenv("STORAGE_BUCKET")
+    default_role: str = os.getenv("DEFAULT_ROLE")
+    main_role: str = os.getenv("MAIN_ROLE")
+    master_role: str = os.getenv("MASTER_ROLE")
 
 
 setting = Settings()

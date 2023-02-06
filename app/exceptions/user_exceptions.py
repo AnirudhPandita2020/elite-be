@@ -35,3 +35,8 @@ class UserPasswordWeakException(HTTPException):
 class InvalidProfilePhotoException(HTTPException):
     def __init__(self, message="Invalid photo format"):
         super().__init__(detail=message, status_code=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+class UserEmailNotFoundException(HTTPException):
+    def __init__(self, message="No user with the current email id found"):
+        super().__init__(detail=message, status_code=status.HTTP_404_NOT_FOUND)

@@ -1,6 +1,9 @@
 import json
 
 from app.utils.env_utils import setting
+from test.truck_test.truck_test import update_status_of_elite_user
+
+global token
 
 
 def test_create_invalid_user(client_app):
@@ -66,6 +69,7 @@ def test_invalid_credentials(client_app):
 
 
 def test_correct_credentials(client_app):
+    global token
     test_elite_user_strong_password(client_app)
     login_data = {
         'username': f'test@{setting.valid_email_allowed}',
@@ -73,4 +77,16 @@ def test_correct_credentials(client_app):
     }
 
     login_response = client_app.post("/api/elite/login", data=login_data)
+    token = login_response.json()['access_token']
     assert login_response.status_code == 201
+
+
+def test_role_reversal(client_app, local_database_session):
+    global token
+    test_elite_user_strong_password(client_app)
+    update_status_of_elite_user(token, local_database_session)
+
+    response = client_app.put(f"/api/elite/user/access?email=test@{setting.valid_email_allowed}",
+                              headers={'Authorization': f'Bearer {token}'})
+    print(response.json())
+    assert response.status_code == 200

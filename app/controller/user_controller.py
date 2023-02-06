@@ -41,10 +41,10 @@ class UserController:
 
     @router.put(path="/api/elite/user/access", status_code=status.HTTP_200_OK)
     async def provide_access_to_user(self, email: str, user: User = Depends(get_user_from_token)):
-        """Provide access to a user (Drive -> Manager)"""
-        pass
+        """Provide access to a user (Drive > Manager)"""
+        return await change_active_user(self.db, email)
 
-    @router.get(path="/api/elite/user", status_code=status.HTTP_200_OK, response_model=List[UserModel])
-    async def get_inactive_user(self, is_active: bool, user: User = Depends(get_user_from_token)):
-        """Fetch list of user currently inactive"""
-        return await fetch_user_list(is_active, self.db)
+    @router.get(path="/api/elite/user/all", status_code=status.HTTP_200_OK, response_model=List[UserModel])
+    async def get_user_list(self, user: User = Depends(get_user_from_token)):
+        """Fetch List of user apart from the current one"""
+        return await fetch_user_list(user, self.db)

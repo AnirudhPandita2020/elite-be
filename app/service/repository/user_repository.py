@@ -29,5 +29,14 @@ def addProfileUrl(url: str, db: Session, user: User):
     db.commit()
 
 
-def fetchUserList(is_active: bool, db: Session):
-    return db.query(User).filter(User.is_active == is_active).all()
+def fetchUserList(user: User, db: Session):
+    return db.query(User).filter(User.email != user.email).all()
+
+
+def updateActiveStatus(email: str, is_active: bool, authority_level: int, db: Session, role: str):
+    db.query(User).filter(User.email == email).update({
+        User.is_active: is_active,
+        User.authority_level: authority_level,
+        User.role: role
+    }, synchronize_session=False)
+    db.commit()

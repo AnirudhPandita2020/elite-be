@@ -57,5 +57,22 @@ async def upload_profile_pic(user: User, db: Session, profile_picture: UploadFil
     return {'message': "Profile photo added"}
 
 
-async def fetch_user_list(is_active: bool, db: Session):
-    return fetchUserList(is_active, db)
+async def fetch_user_list(user: User, db: Session):
+    return fetchUserList(user, db)
+
+
+async def change_active_user(db: Session, email: str):
+    user = findByEmail(email, db)
+    if user is None:
+        raise UserEmailNotFoundException()
+
+    if user.role == setting.master_role:
+        raise UserAccessDeniedException()
+
+    if not user.is_active:
+        updateActiveStatus(email, not user.is_active, int(setting.authority_level), db, setting.main_role)
+
+    else:
+        updateActiveStatus(email, not user.is_active, 0, db, setting.default_role)
+
+    return {'message': f'{email} has now been activated'} if user.is_active else {'message': f'{email} is disabled'}
