@@ -4,7 +4,7 @@ from app.models.user_model import User
 from app.security.oauth2_bearer import verify_bearer_token
 from app.utils.env_utils import setting
 
-global truck_id, access_token
+global truck_id, access_token, trailer_number
 
 dummy_truck_data = [
     {
@@ -79,7 +79,7 @@ def test_add_truck_new_user_without_authority(client_app):
 
 
 def test_add_new_truck_with_authority(client_app, local_database_session):
-    global truck_id, access_token
+    global truck_id, access_token, trailer_number
     """Create a new elite user"""
     user_data = {
         "email": f"test@{setting.valid_email_allowed}",
@@ -117,13 +117,14 @@ def test_add_new_truck_with_authority(client_app, local_database_session):
     }
     truck_response = client_app.post("/api/elite/truck/add", content=json.dumps(truck_data), headers=custom_header)
     truck_id = truck_response.json()['truck_id']
+    trailer_number = truck_response.json()['trailer_number']
     assert truck_response.status_code == 201
 
 
 def test_fetch_truck_by_id(client_app, local_database_session):
     global truck_id, access_token
     auth_headers = {
-        'Authorization': f"Bearer {access_token}"
+        'Authorization': f'Bearer {access_token}'
     }
     test_add_new_truck_with_authority(client_app, local_database_session)
     truck_response = client_app.get(f"/api/elite/truck/fetch?truck_id={truck_id}", headers=auth_headers)
@@ -183,6 +184,18 @@ def test_update_truck_detail(client_app, local_database_session):
                                            json=truck_data)
     print(update_truck_response.json())
     assert update_truck_response.status_code == 200
+
+
+def test_enable_disable_of_truck(client_app, local_database_session):
+    global access_token, trailer_number
+    test_add_new_truck_with_authority(client_app, local_database_session)
+    auth_headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+    response = client_app.put(f"/api/elite/truck?trailer_number={trailer_number}", headers=auth_headers)
+    assert response.status_code == 200
+
+
 
 
 def update_status_of_elite_user(token, local_database_session):

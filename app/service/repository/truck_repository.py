@@ -72,3 +72,15 @@ def updateTruckDetail(truck_id: int, truck_dto: CreateTruckDto, db: Session) -> 
         return findTruckById(truck_id, db)
     except IntegrityError:
         db.rollback()
+
+
+def deleteTruck(trailer_number: str, db: Session):
+    db.query(Truck).filter(Truck.trailer_number == trailer_number).delete(synchronize_session=False)
+    db.commit()
+
+
+def update_active_status_by_trailer_number(trailer_number: str, db: Session, active: bool):
+    db.query(Truck).filter(Truck.trailer_number == trailer_number).update({
+        Truck.is_active: active
+    })
+    db.commit()

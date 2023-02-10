@@ -4,6 +4,7 @@ from fastapi_utils.inferring_router import InferringRouter
 
 from app.database.database_engine import get_db
 from app.exceptions.handler.route_handler import RouteErrorHandler
+from app.jobs.expire_certificate import check_expire_certificate_of_trucks
 from app.security.oauth2_bearer import get_user_from_token
 from app.service.truck_service import *
 
@@ -26,9 +27,9 @@ class TruckController:
         return await fetch_truck_by_id(int(truck_id), self.db)
 
     @router.put(path="/api/elite/truck/update", status_code=status.HTTP_200_OK)
-    async def update_truck(self, truck_id: str, truck_dto: CreateTruckDto):
+    async def update_truck(self, truck_id: str, truck_dto: CreateTruckDto, recent_activity_task: BackgroundTasks):
         """Updates the data of a particular truck id"""
-        return await update_truck_detail(int(truck_id), truck_dto, self.user, self.db)
+        return await update_truck_detail(int(truck_id), truck_dto, self.user, self.db, recent_activity_task)
 
     @router.post(path="/api/elite/truck/upload", status_code=status.HTTP_201_CREATED)
     def upload_truck_excel(self, upload_excel: UploadFile):
@@ -44,3 +45,18 @@ class TruckController:
     @router.get(path="/api/elite/truck/all", status_code=status.HTTP_200_OK)
     async def fetch_all_trucks(self):
         return self.db.query(Truck).all()
+
+    @router.delete(path="/api/elite/truck/delete", status_code=status.HTTP_204_NO_CONTENT)
+    async def delete_truck(self, trailer_number: str, recent_activity_task: BackgroundTasks):
+        """Removes a truck given by its trailer_number"""
+        return await delete_truck(trailer_number, self.user, self.db, recent_activity_task)
+
+    @router.put(path="/api/elite/truck")
+    async def enable_disable_truck(self, trailer_number: str):
+        """Changes the status of the truck"""
+        return await enable_disable_truck(trailer_number, self.db)
+
+    @router.get(path="/api/elite/truck/expiring", status_code=status.HTTP_200_OK)
+    async def get_expiring_trucks(self):
+        """Returns the list of the trucks having expiring certificate"""
+        return await check_expire_certificate_of_trucks(db=self.db)
